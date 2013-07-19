@@ -47,4 +47,12 @@ abstract class AbstractTag
     {
         return null;
     }
+
+    /**
+     * @return int|null
+     */
+    public function marginLeft()
+    {
+        return null;
+    }
 }

@@ -36,4 +36,12 @@ class ControllElement implements ElementInterface
     {
         return $this->tag->marginBottom();
     }
+
+    /**
+     * @return int|null
+     */
+    public function marginLeft()
+    {
+        return $this->tag->marginLeft();
+    }
 }

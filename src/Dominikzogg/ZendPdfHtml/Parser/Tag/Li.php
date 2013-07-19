@@ -13,4 +13,12 @@ class Li extends BlockTag
     {
         return 'li';
     }
+
+    /**
+     * @return int|null
+     */
+    public function marginLeft()
+    {
+        return 10;
+    }
 }

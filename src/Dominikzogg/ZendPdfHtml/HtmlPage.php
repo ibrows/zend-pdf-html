@@ -123,18 +123,30 @@ class HtmlPage
                         }
                         $maxFontSize = $defaultfontSize;
                     }
-                    if($element instanceof StartElement && !is_null($element->marginTop())) {
-                        if($y1 < $y2) {
-                            $y += $element->marginTop();
-                        } else {
-                            $y -= $element->marginTop();
+                    if($element instanceof StartElement) {
+                        if(!is_null($element->marginTop())) {
+                            if($y1 < $y2) {
+                                $y += $element->marginTop();
+                            } else {
+                                $y -= $element->marginTop();
+                            }
+                        }
+                        if(!is_null($element->marginLeft())) {
+                            $x1 += $element->marginLeft();
+                            $x = $x1;
                         }
                     }
-                    if($element instanceof StopElement && !is_null($element->marginBottom())) {
-                        if($y1 < $y2) {
-                            $y += $element->marginBottom();
-                        } else {
-                            $y -= $element->marginBottom();
+                    if($element instanceof StopElement) {
+                        if(!is_null($element->marginBottom())) {
+                            if($y1 < $y2) {
+                                $y += $element->marginBottom();
+                            } else {
+                                $y -= $element->marginBottom();
+                            }
+                        }
+                        if(!is_null($element->marginLeft())) {
+                            $x1 -= $element->marginLeft();
+                            $x = $x1;
                         }
                     }
                 }
