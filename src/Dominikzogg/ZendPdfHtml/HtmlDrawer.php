@@ -114,6 +114,9 @@ class HtmlDrawer
                             }
                         }
                         if(!is_null($element->marginLeft())) {
+                            if(!is_null($element->getListSign())) {
+                                $words[] = new Word($element->getListSign(), $x, $y, $element->getFont($defaultFont), $element->getFontSize($defaultfontSize));
+                            }
                             $x1 += $element->marginLeft();
                             $x = $x1;
                         }

@@ -15,10 +15,18 @@ class Li extends BlockTag
     }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function marginLeft()
     {
         return 10;
+    }
+
+    /**
+     * @return string
+     */
+    public function getListSign()
+    {
+        return '-';
     }
 }

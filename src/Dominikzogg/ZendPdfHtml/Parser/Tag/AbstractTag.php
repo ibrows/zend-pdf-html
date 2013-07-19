@@ -25,6 +25,14 @@ abstract class AbstractTag
     }
 
     /**
+     * @return string|null
+     */
+    public function getListSign()
+    {
+        return null;
+    }
+
+    /**
      * @return bool
      */
     public function isBlockElement()
