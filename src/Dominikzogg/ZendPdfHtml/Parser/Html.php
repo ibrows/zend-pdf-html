@@ -34,7 +34,7 @@ class Html
             switch($sign) {
                 case '<':
                     if($buffer) {
-                        $parts[] = new Element($buffer, array($tagStack));
+                        $parts[] = new Element($buffer, $tagStack);
                         $buffer = '';
                     }
                     break;
