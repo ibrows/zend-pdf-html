@@ -14,6 +14,11 @@ class Html
         $this->availableTags[strtolower($tag->getName())] = $tag;
     }
 
+    /**
+     * @param string $html
+     * @return Element[]
+     * @throws \ErrorException
+     */
     public function parse($html)
     {
         $buffer = '';

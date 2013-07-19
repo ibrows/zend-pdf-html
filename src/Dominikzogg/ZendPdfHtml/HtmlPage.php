@@ -4,6 +4,8 @@ namespace Dominikzogg\ZendPdfHtml;
 
 use Dominikzogg\ZendPdfHtml\Parser\Html;
 use ZendPdf\Page;
+use ZendPdf\Font;
+use ZendPdf\Resource\Font\AbstractFont;
 
 class HtmlPage
 {
@@ -62,9 +64,72 @@ class HtmlPage
         return $this->parser;
     }
 
-    public function drawHtml($html, $x, $y, $w = 0)
+    public function drawHtml($html, $x1, $y1, $x2 = null, $y2 = null)
     {
+        if(is_null($x2)) {
+            $x2 = $this->getPage()->getWidth() - $x1;
+        }
+
+        if(is_null($y2)) {
+            $y2 = $this->getPage()->getWidth() - $y1;
+        }
+
+        $x = $x1;
+        $y = $y1;
+
+        if(is_null($this->getPage()->getFont())) {
+            $this->getPage()->setFont(Font::fontWithName(Font::FONT_HELVETICA), 10);
+        }
+
+        $defaultFont = $this->getPage()->getFont();
+        $defaultfontSize = $this->getPage()->getFontSize();
+
+        $words = array();
+
         $elements = $this->getParser()->parse($html);
-        print_r($elements);
+
+        $maxFontSize = $defaultfontSize;
+
+        foreach($elements as $element) {
+
+            $font = $element->getFont($defaultFont);
+            $fontSize = $element->getFontSize($defaultfontSize);
+
+            $maxFontSize = $fontSize > $maxFontSize ? $fontSize : $maxFontSize;
+
+            $rawWords = explode(' ', $element->getValue());
+
+            foreach($rawWords as $rawWord) {
+                $rawWord .= $rawWord ? ' ' : '';
+                $wordWith = self::widthForStringUsingFontSize($rawWord, $font, $fontSize);
+                if($x + $wordWith > $x2) {
+                    $x = $x1;
+                    $y += $maxFontSize * 1.3;
+                    $maxFontSize = $fontSize;
+                }
+                $words[] = new Word($rawWord, $x, $y, $font, $fontSize);
+                $x += $wordWith;
+            }
+        }
+
+        foreach($words as $word)
+        {
+            /** @var Word $word */
+            $this->getPage()->setFont($word->getFont(), $word->getFontSize());
+            $this->getPage()->drawText($word->getText(), $word->getX(), $word->getY());
+        }
+    }
+
+    protected static function widthForStringUsingFontSize($string, AbstractFont $font, $fontSize)
+    {
+        $drawingString = iconv('UTF-8', 'UTF-16BE//IGNORE', $string);
+        $characters = array();
+        for ($i = 0; $i < strlen($drawingString); $i++) {
+            $characters[] = (ord($drawingString[$i++]) << 8 ) | ord($drawingString[$i]);
+        }
+        $glyphs = $font->glyphNumbersForCharacters($characters);
+        $widths = $font->widthsForGlyphs($glyphs);
+        $stringWidth = (array_sum($widths) / $font->getUnitsPerEm()) * $fontSize;
+        return $stringWidth;
     }
 }
