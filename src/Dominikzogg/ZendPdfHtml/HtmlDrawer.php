@@ -11,22 +11,12 @@ use ZendPdf\Page;
 use ZendPdf\Font;
 use ZendPdf\Resource\Font\AbstractFont;
 
-class HtmlPage
+class HtmlDrawer
 {
-    /**
-     * @var Page
-     */
-    protected $page;
-
     /**
      * @var Html
      */
     protected $parser;
-
-    public function __construct(Page $page)
-    {
-        $this->setPage($page);
-    }
 
     /**
      * @param Page $page
@@ -36,14 +26,6 @@ class HtmlPage
     {
         $this->page = $page;
         return $this;
-    }
-
-    /**
-     * @return Page
-     */
-    protected function getPage()
-    {
-        return $this->page;
     }
 
     /**
@@ -68,25 +50,25 @@ class HtmlPage
         return $this->parser;
     }
 
-    public function drawHtml($html, $x1, $y1, $x2 = null, $y2 = null)
+    public function drawHtml(Page $page, $html, $x1, $y1, $x2 = null, $y2 = null)
     {
         if(is_null($x2)) {
-            $x2 = $this->getPage()->getWidth() - $x1;
+            $x2 = $page->getWidth() - $x1;
         }
 
         if(is_null($y2)) {
-            $y2 = $this->getPage()->getHeight() - $y1;
+            $y2 = $page->getHeight() - $y1;
         }
 
         $x = $x1;
         $y = $y1;
 
-        if(is_null($this->getPage()->getFont())) {
-            $this->getPage()->setFont(Font::fontWithName(Font::FONT_HELVETICA), 10);
+        if(is_null($page->getFont())) {
+            $page->setFont(Font::fontWithName(Font::FONT_HELVETICA), 10);
         }
 
-        $defaultFont = $this->getPage()->getFont();
-        $defaultfontSize = $this->getPage()->getFontSize();
+        $defaultFont = $page->getFont();
+        $defaultfontSize = $page->getFontSize();
         $maxFontSize = $defaultfontSize;
         $words = array();
         $elements = $this->getParser()->parse($html);
@@ -156,8 +138,8 @@ class HtmlPage
         foreach($words as $word)
         {
             /** @var Word $word */
-            $this->getPage()->setFont($word->getFont(), $word->getFontSize());
-            $this->getPage()->drawText($word->getText(), $word->getX(), $word->getY());
+            $page->setFont($word->getFont(), $word->getFontSize());
+            $page->drawText($word->getText(), $word->getX(), $word->getY());
         }
     }
 
