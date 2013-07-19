@@ -13,4 +13,9 @@ class Em extends AbstractTag
     {
         return 'em';
     }
+
+    public function getFont()
+    {
+        // Font->isBold();
+    }
 }

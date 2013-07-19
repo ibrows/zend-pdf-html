@@ -5,6 +5,7 @@ namespace Dominikzogg\ZendPdfHtml;
 use Dominikzogg\ZendPdfHtml\Parser\Element\ControllElement;
 use Dominikzogg\ZendPdfHtml\Parser\Element\DataElement;
 use Dominikzogg\ZendPdfHtml\Parser\Element\StartElement;
+use Dominikzogg\ZendPdfHtml\Parser\Element\StopElement;
 use Dominikzogg\ZendPdfHtml\Parser\Html;
 use ZendPdf\Page;
 use ZendPdf\Font;
@@ -86,23 +87,15 @@ class HtmlPage
 
         $defaultFont = $this->getPage()->getFont();
         $defaultfontSize = $this->getPage()->getFontSize();
-
-        $words = array();
-
-        $elements = $this->getParser()->parse($html);
-
         $maxFontSize = $defaultfontSize;
-
-        foreach($elements as $index => $element) {
-
+        $words = array();
+        $elements = $this->getParser()->parse($html);
+        foreach($elements as $element) {
             if($element instanceof DataElement) {
                 $font = $element->getFont($defaultFont);
                 $fontSize = $element->getFontSize($defaultfontSize);
-
                 $maxFontSize = $fontSize > $maxFontSize ? $fontSize : $maxFontSize;
-
                 $rawWords = explode(' ', $element->getValue());
-
                 foreach($rawWords as $rawWord) {
                     $rawWord .= $rawWord ? ' ' : '';
                     $wordWith = self::widthForStringUsingFontSize($rawWord, $font, $fontSize);
@@ -119,15 +112,30 @@ class HtmlPage
                     $x += $wordWith;
                 }
             } elseif($element instanceof ControllElement) {
-
-                if($element->isBlockElement() && $x != $x1) {
-                    $x = $x1;
-                    if($x1 > $x2) {
-                        $y += $maxFontSize * 1.3;
-                    } else {
-                        $y -= $maxFontSize * 1.3;
+                if($element->isBlockElement()) {
+                    if($x != $x1) {
+                        $x = $x1;
+                        if($x1 > $x2) {
+                            $y += $maxFontSize * 1.3;
+                        } else {
+                            $y -= $maxFontSize * 1.3;
+                        }
+                        $maxFontSize = $defaultfontSize;
                     }
-                    $maxFontSize = $defaultfontSize;
+                    if($element instanceof StartElement && !is_null($element->marginTop())) {
+                        if($x1 > $x2) {
+                            $y += $element->marginTop();
+                        } else {
+                            $y -= $element->marginTop();
+                        }
+                    }
+                    if($element instanceof StopElement && !is_null($element->marginBottom())) {
+                        if($x1 > $x2) {
+                            $y += $element->marginBottom();
+                        } else {
+                            $y -= $element->marginBottom();
+                        }
+                    }
                 }
             }
         }

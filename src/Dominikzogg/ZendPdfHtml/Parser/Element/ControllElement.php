@@ -13,8 +13,27 @@ class ControllElement implements ElementInterface
         $this->tag = $tag;
     }
 
+    /**
+     * @return bool
+     */
     public function isBlockElement()
     {
         return $this->tag->isBlockElement();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function marginTop()
+    {
+        return $this->tag->marginTop();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function marginBottom()
+    {
+        return $this->tag->marginBottom();
     }
 }

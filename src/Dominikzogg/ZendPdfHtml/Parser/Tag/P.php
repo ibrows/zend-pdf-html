@@ -4,14 +4,14 @@ namespace Dominikzogg\ZendPdfHtml\Parser\Tag;
 
 use ZendPdf\Font;
 
-class Ul extends BlockTag
+class P extends BlockTag
 {
     /**
      * @return string
      */
     public function getName()
     {
-        return 'ul';
+        return 'p';
     }
 
     /**

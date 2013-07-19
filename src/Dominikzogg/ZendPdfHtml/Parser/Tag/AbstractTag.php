@@ -31,4 +31,20 @@ abstract class AbstractTag
     {
         return false;
     }
+
+    /**
+     * @return int|null
+     */
+    public function marginTop()
+    {
+        return null;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function marginBottom()
+    {
+        return null;
+    }
 }

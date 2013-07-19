@@ -4,6 +4,7 @@ namespace Dominikzogg\ZendPdfHtml\Parser;
 
 use Dominikzogg\ZendPdfHtml\Parser\Element\ElementInterface;
 use Dominikzogg\ZendPdfHtml\Parser\Element\DataElement;
+use Dominikzogg\ZendPdfHtml\Parser\Element\ShortElement;
 use Dominikzogg\ZendPdfHtml\Parser\Element\StartElement;
 use Dominikzogg\ZendPdfHtml\Parser\Element\StopElement;
 use Dominikzogg\ZendPdfHtml\Parser\Tag\AbstractTag;
@@ -25,6 +26,7 @@ class Html
      */
     public function parse($html)
     {
+        $html = str_replace(array("\r\n", "\r", "\n"), ' ', $html);
         $buffer = '';
         $tagStack = array();
         $valueStack = array();
@@ -62,8 +64,16 @@ class Html
                                 throw new \ErrorException("Invalid Structure, open tag'{$openTagName}', close tag '{$closeTagName}'");
                             }
                         }
-                        // ignore shorttag
-                        elseif(substr($buffer, -1) == '/') {}
+                        // shorttag
+                        elseif(substr($buffer, -1) == '/') {
+                            $buffer = trim(substr($buffer, 0, -1));
+                            if(array_key_exists($buffer, $this->availableTags)) {
+                                $shortTag = clone $this->availableTags[$buffer];
+                            } else {
+                                $shortTag = new UnknownTag($buffer);
+                            }
+                            $parts[] = new ShortElement($shortTag, true);
+                        }
                         // open tag
                         else {
                             if(array_key_exists($buffer, $this->availableTags)) {

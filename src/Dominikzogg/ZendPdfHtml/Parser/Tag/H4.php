@@ -18,4 +18,12 @@ class H4 extends BlockTag
     {
         return Font::fontWithName(Font::FONT_HELVETICA_BOLD);
     }
+
+    /**
+     * @return int
+     */
+    public function marginBottom()
+    {
+        return 5;
+    }
 }
