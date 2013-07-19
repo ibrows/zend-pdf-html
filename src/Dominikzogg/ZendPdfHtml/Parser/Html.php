@@ -3,19 +3,11 @@
 namespace Dominikzogg\ZendPdfHtml\Parser;
 
 use Dominikzogg\ZendPdfHtml\Parser\Tag\AbstractTag;
-use Dominikzogg\ZendPdfHtml\Parser\Tag\H4;
-use Dominikzogg\ZendPdfHtml\Parser\Tag\Strong;
 use Dominikzogg\ZendPdfHtml\Parser\Tag\UnknownTag;
 
 class Html
 {
     protected $availableTags = array();
-
-    public function __construct()
-    {
-        $this->registerTag(new H4());
-        $this->registerTag(new Strong());
-    }
 
     public function registerTag(AbstractTag $tag)
     {
