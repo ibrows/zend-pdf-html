@@ -11,8 +11,11 @@ $pdf = new PdfDocument();
 $page = new Page(Page::SIZE_A4_LANDSCAPE);
 
 
-$html = new HtmlPage($page);
-$html->drawHtml('Hans<h4><strong>Dies</strong> ist <strong>ein</strong> Test</h4><ul><li>Punkt1</li><li>Punkt2</li></ul>Urs', 30, 30, 130, 130);
+$htmlPage = new HtmlPage($page);
+$htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\H4());
+$htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\Em());
+$htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\Li());
+$htmlPage->drawHtml('Hans<h4><em>Dies</em> ist <em>ein</em> Test</h4><ul><li>Punkt1</li><li>Punkt2</li></ul>Urs', 30, 130, 130, 30);
 
 
 

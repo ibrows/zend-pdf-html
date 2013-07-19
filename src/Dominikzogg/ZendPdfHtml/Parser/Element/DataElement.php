@@ -1,11 +1,11 @@
 <?php
 
-namespace Dominikzogg\ZendPdfHtml\Parser;
+namespace Dominikzogg\ZendPdfHtml\Parser\Element;
 
 use Dominikzogg\ZendPdfHtml\Parser\Tag\AbstractTag;
 use ZendPdf\Resource\Font\AbstractFont;
 
-class Element
+class DataElement implements ElementInterface
 {
     /**
      * @var string

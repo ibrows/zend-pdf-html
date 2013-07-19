@@ -2,6 +2,10 @@
 
 namespace Dominikzogg\ZendPdfHtml\Parser;
 
+use Dominikzogg\ZendPdfHtml\Parser\Element\ElementInterface;
+use Dominikzogg\ZendPdfHtml\Parser\Element\DataElement;
+use Dominikzogg\ZendPdfHtml\Parser\Element\StartElement;
+use Dominikzogg\ZendPdfHtml\Parser\Element\StopElement;
 use Dominikzogg\ZendPdfHtml\Parser\Tag\AbstractTag;
 use Dominikzogg\ZendPdfHtml\Parser\Tag\UnknownTag;
 
@@ -16,7 +20,7 @@ class Html
 
     /**
      * @param string $html
-     * @return Element[]
+     * @return ElementInterface[]
      * @throws \ErrorException
      */
     public function parse($html)
@@ -31,7 +35,7 @@ class Html
             switch($sign) {
                 case '<':
                     if($buffer) {
-                        $parts[] = new Element($buffer, $tagStack);
+                        $parts[] = new DataElement($buffer, $tagStack);
                         $buffer = '';
                     }
                     break;
@@ -42,13 +46,20 @@ class Html
                         if(substr($buffer, 0, 1) == '/') {
                             $lastValue = array_pop($valueStack);
                             if($lastValue) {
-                                $parts[] = new Element($lastValue, $tagStack);
+                                $parts[] = new DataElement($lastValue, $tagStack);
                             }
                             $lastTag = array_pop($tagStack);
-                            $openTag = $lastTag->getName();
-                            $closeTag = substr($buffer, 1);
-                            if($openTag != $closeTag) {
-                                throw new \ErrorException("Invalid Structure, open tag'{$openTag}', close tag '{$closeTag}'");
+                            $openTagName = $lastTag->getName();
+                            $closeTagName = substr($buffer, 1);
+                            if($openTagName == $closeTagName) {
+                                if(array_key_exists($closeTagName, $this->availableTags)) {
+                                    $closeTag = clone $this->availableTags[$closeTagName];
+                                } else {
+                                    $closeTag = new UnknownTag($closeTagName);
+                                }
+                                $parts[] = new StopElement($closeTag, false);
+                            } else {
+                                throw new \ErrorException("Invalid Structure, open tag'{$openTagName}', close tag '{$closeTagName}'");
                             }
                         }
                         // ignore shorttag
@@ -56,10 +67,12 @@ class Html
                         // open tag
                         else {
                             if(array_key_exists($buffer, $this->availableTags)) {
-                                $tagStack[] = clone $this->availableTags[$buffer];
+                                $openTag = clone $this->availableTags[$buffer];
                             } else {
-                                $tagStack[] = new UnknownTag($buffer);
+                                $openTag = new UnknownTag($buffer);
                             }
+                            $tagStack[] = $openTag;
+                            $parts[] = new StartElement($openTag, true);
                         }
                         $buffer = '';
                     }
@@ -70,7 +83,7 @@ class Html
             }
         }
         if($buffer) {
-            $parts[] = new Element($buffer, array());
+            $parts[] = new DataElement($buffer, array());
         }
         return $parts;
     }

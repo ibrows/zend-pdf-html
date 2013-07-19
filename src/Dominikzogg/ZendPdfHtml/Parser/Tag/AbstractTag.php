@@ -23,4 +23,12 @@ abstract class AbstractTag
     {
         return null;
     }
+
+    /**
+     * @return bool
+     */
+    public function isBlockElement()
+    {
+        return false;
+    }
 }

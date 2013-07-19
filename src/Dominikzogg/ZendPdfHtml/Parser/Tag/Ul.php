@@ -4,18 +4,15 @@ namespace Dominikzogg\ZendPdfHtml\Parser\Tag;
 
 use ZendPdf\Font;
 
-class H4 extends BlockTag
+class Ul extends BlockTag
 {
+    protected $newLine = true;
+
     /**
      * @return string
      */
     public function getName()
     {
-        return 'h4';
-    }
-
-    public function getFont()
-    {
-        return Font::fontWithName(Font::FONT_HELVETICA_BOLD);
+        return 'ul';
     }
 }
