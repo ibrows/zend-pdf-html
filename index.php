@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-use Dominikzogg\ZendPdfHtml\HtmlPage;
+use Dominikzogg\ZendPdfHtml\HtmlDrawer;
 use ZendPdf\PdfDocument;
 use ZendPdf\Page;
 
@@ -10,8 +10,7 @@ use ZendPdf\Page;
 $pdf = new PdfDocument();
 $page = new Page(Page::SIZE_A4_LANDSCAPE);
 
-
-$htmlPage = new HtmlPage($page);
+$htmlPage = new HtmlDrawer();
 $htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\Br());
 $htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\Em());
 $htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\H4());
@@ -19,7 +18,7 @@ $htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\Li()
 $htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\P());
 $htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\Strong());
 $htmlPage->getParser()->registerTag(new \Dominikzogg\ZendPdfHtml\Parser\Tag\Ul());
-$htmlPage->drawHtml('<h4>Produktbeschrieb</h4>
+$htmlPage->drawHtml($page, '<h4>Produktbeschrieb</h4>
 <ul>
 <li>Winkelprofile mit Wandstärke 2.3 mm</li>
 <li>Randzone konisch verjüngt als Einführhilfe</li>
