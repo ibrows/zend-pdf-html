@@ -75,7 +75,7 @@ class HtmlPage
         }
 
         if(is_null($y2)) {
-            $y2 = $this->getPage()->getWidth() - $y1;
+            $y2 = $this->getPage()->getHeight() - $y1;
         }
 
         $x = $x1;
@@ -90,6 +90,7 @@ class HtmlPage
         $maxFontSize = $defaultfontSize;
         $words = array();
         $elements = $this->getParser()->parse($html);
+
         foreach($elements as $element) {
             if($element instanceof DataElement) {
                 $font = $element->getFont($defaultFont);
@@ -101,7 +102,7 @@ class HtmlPage
                     $wordWith = self::widthForStringUsingFontSize($rawWord, $font, $fontSize);
                     if($x + $wordWith > $x2) {
                         $x = $x1;
-                        if($x1 > $x2) {
+                        if($y1 < $y2) {
                             $y += $maxFontSize * 1.3;
                         } else {
                             $y -= $maxFontSize * 1.3;
@@ -115,7 +116,7 @@ class HtmlPage
                 if($element->isBlockElement()) {
                     if($x != $x1) {
                         $x = $x1;
-                        if($x1 > $x2) {
+                        if($y1 < $y2) {
                             $y += $maxFontSize * 1.3;
                         } else {
                             $y -= $maxFontSize * 1.3;
@@ -123,14 +124,14 @@ class HtmlPage
                         $maxFontSize = $defaultfontSize;
                     }
                     if($element instanceof StartElement && !is_null($element->marginTop())) {
-                        if($x1 > $x2) {
+                        if($y1 < $y2) {
                             $y += $element->marginTop();
                         } else {
                             $y -= $element->marginTop();
                         }
                     }
                     if($element instanceof StopElement && !is_null($element->marginBottom())) {
-                        if($x1 > $x2) {
+                        if($y1 < $y2) {
                             $y += $element->marginBottom();
                         } else {
                             $y -= $element->marginBottom();
