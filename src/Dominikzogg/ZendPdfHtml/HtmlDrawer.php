@@ -50,7 +50,7 @@ class HtmlDrawer
         return $this->parser;
     }
 
-    public function drawHtml(Page $page, $html, $x1, $y1, $x2 = null, $y2 = null)
+    public function drawHtml(Page $page, $html, $x1, $y1, $x2 = null, $y2 = null, $lineHeight = 1.3, $charEncoding = '')
     {
         if(is_null($x2)) {
             $x2 = $page->getWidth() - $x1;
@@ -85,9 +85,9 @@ class HtmlDrawer
                     if($x + $wordWith > $x2) {
                         $x = $x1;
                         if($y1 < $y2) {
-                            $y += $maxFontSize * 1.3;
+                            $y += $maxFontSize * $lineHeight;
                         } else {
-                            $y -= $maxFontSize * 1.3;
+                            $y -= $maxFontSize * $lineHeight;
                         }
                         $maxFontSize = $fontSize;
                     }
@@ -99,9 +99,9 @@ class HtmlDrawer
                     if($x != $x1) {
                         $x = $x1;
                         if($y1 < $y2) {
-                            $y += $maxFontSize * 1.3;
+                            $y += $maxFontSize * $lineHeight;
                         } else {
-                            $y -= $maxFontSize * 1.3;
+                            $y -= $maxFontSize * $lineHeight;
                         }
                         $maxFontSize = $defaultfontSize;
                     }
@@ -142,7 +142,7 @@ class HtmlDrawer
         {
             /** @var Word $word */
             $page->setFont($word->getFont(), $word->getFontSize());
-            $page->drawText($word->getText(), $word->getX(), $word->getY());
+            $page->drawText($word->getText(), $word->getX(), $word->getY(), $charEncoding);
         }
     }
 
