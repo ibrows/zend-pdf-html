@@ -144,6 +144,8 @@ class HtmlDrawer
             $page->setFont($word->getFont(), $word->getFontSize());
             $page->drawText($word->getText(), $word->getX(), $word->getY(), $charEncoding);
         }
+
+        return array($x, $y);
     }
 
     protected static function widthForStringUsingFontSize($string, AbstractFont $font, $fontSize)
