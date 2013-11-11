@@ -1,5 +1,5 @@
 {
-    "name": "dominikzogg/zend-pdf-html",
+    "name": "ibrows/zend-pdf-html",
     "description": "Draw html within a zend pdf",
     "keywords": ["zendpdf", "zendframework", "pdf", "htmlpdf"],
     "license": "MIT",
