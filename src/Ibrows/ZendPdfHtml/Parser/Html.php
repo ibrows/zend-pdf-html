@@ -67,19 +67,21 @@ class Html
                         // shorttag
                         elseif(substr($buffer, -1) == '/') {
                             $buffer = trim(substr($buffer, 0, -1));
-                            if(array_key_exists($buffer, $this->availableTags)) {
-                                $shortTag = clone $this->availableTags[$buffer];
+                            $tagParts = explode(' ', $buffer);
+                            if(array_key_exists($tagParts[0], $this->availableTags)) {
+                                $shortTag = clone $this->availableTags[$tagParts[0]];
                             } else {
-                                $shortTag = new UnknownTag($buffer);
+                                $shortTag = new UnknownTag($tagParts[0]);
                             }
                             $parts[] = new ShortElement($shortTag, true);
                         }
                         // open tag
                         else {
-                            if(array_key_exists($buffer, $this->availableTags)) {
-                                $openTag = clone $this->availableTags[$buffer];
+                            $tagParts = explode(' ', $buffer);
+                            if(array_key_exists($tagParts[0], $this->availableTags)) {
+                                $openTag = clone $this->availableTags[$tagParts[0]];
                             } else {
-                                $openTag = new UnknownTag($buffer);
+                                $openTag = new UnknownTag($tagParts[0]);
                             }
                             $tagStack[] = $openTag;
                             $parts[] = new StartElement($openTag, true);
