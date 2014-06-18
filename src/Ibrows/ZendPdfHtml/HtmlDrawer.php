@@ -19,16 +19,6 @@ class HtmlDrawer
     protected $parser;
 
     /**
-     * @param Page $page
-     * @return $this
-     */
-    public function setPage(Page $page)
-    {
-        $this->page = $page;
-        return $this;
-    }
-
-    /**
      * @param Html $parser
      * @return $this
      */
