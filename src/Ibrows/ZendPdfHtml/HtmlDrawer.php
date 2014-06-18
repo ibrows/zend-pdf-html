@@ -20,7 +20,7 @@ class HtmlDrawer
 
     /**
      * @param Page $page
-     * @return HtmlPage
+     * @return $this
      */
     public function setPage(Page $page)
     {
@@ -30,7 +30,7 @@ class HtmlDrawer
 
     /**
      * @param Html $parser
-     * @return HtmlPage
+     * @return $this
      */
     public function setParser(Html $parser)
     {
@@ -81,7 +81,7 @@ class HtmlDrawer
                 $rawWords = explode(' ', $element->getValue());
                 foreach($rawWords as $rawWord) {
                     $rawWord .= $rawWord ? ' ' : '';
-                    $wordWith = self::widthForStringUsingFontSize($rawWord, $font, $fontSize);
+                    $wordWith = $this->widthForStringUsingFontSize($rawWord, $font, $fontSize);
                     if($x + $wordWith > $x2) {
                         $x = $x1;
                         if($y1 < $y2) {
@@ -138,8 +138,7 @@ class HtmlDrawer
             }
         }
 
-        foreach($words as $word)
-        {
+        foreach($words as $word) {
             /** @var Word $word */
             $page->setFont($word->getFont(), $word->getFontSize());
             $page->drawText($word->getText(), $word->getX(), $word->getY(), $charEncoding);
@@ -148,7 +147,7 @@ class HtmlDrawer
         return array($x, $y);
     }
 
-    protected static function widthForStringUsingFontSize($string, AbstractFont $font, $fontSize)
+    public function widthForStringUsingFontSize($string, AbstractFont $font, $fontSize)
     {
         $drawingString = iconv('UTF-8', 'UTF-16BE//IGNORE', $string);
         $characters = array();
