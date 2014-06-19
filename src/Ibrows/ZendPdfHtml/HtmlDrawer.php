@@ -40,14 +40,23 @@ class HtmlDrawer
         return $this->parser;
     }
 
-    public function drawHtml(Page $page, $html, $x1, $y1, $x2 = null, $y2 = null, $lineHeight = 1.3, $charEncoding = '')
+    public function drawHtml(Page $page, $html, $x1, $y1, $x2 = null, $y2 = null, $lineHeight = 1.3, $charEncoding = '', $debug = false)
     {
         if(is_null($x2)) {
-            $x2 = $page->getWidth() - $x1;
+            $x2 = $page->getWidth();
         }
 
         if(is_null($y2)) {
-            $y2 = $page->getHeight() - $y1;
+            $y2 = 0;
+        }
+
+        if($debug === true) {
+            var_dump(array(
+                'x1' => $x1,
+                'y1' => $y1,
+                'x2' => $x2,
+                'y2' => $y2,
+            ));
         }
 
         $x = $x1;
@@ -62,6 +71,10 @@ class HtmlDrawer
         $maxFontSize = $defaultfontSize;
         $words = array();
         $elements = $this->getParser()->parse($html);
+
+        if($debug === true) {
+            var_dump($elements);
+        }
 
         foreach($elements as $element) {
             if($element instanceof DataElement) {
@@ -128,10 +141,18 @@ class HtmlDrawer
             }
         }
 
+        if($debug === true) {
+            var_dump($words);
+        }
+
         foreach($words as $word) {
             /** @var Word $word */
             $page->setFont($word->getFont(), $word->getFontSize());
             $page->drawText($word->getText(), $word->getX(), $word->getY(), $charEncoding);
+        }
+
+        if($debug === true) {
+            die();
         }
 
         return array($x, $y);
